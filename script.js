@@ -9,11 +9,12 @@ $ (function () {
     }
   }
   loadPosts ();
+  
   $ ('form').submit (e => {
     let $input = $ (e.target).find ('input');
     let comment = $input.val ();
     $input.val ('');
-    
+
     let comments;
 
     if (localStorage.getItem ('comments') === null) {
@@ -22,13 +23,20 @@ $ (function () {
     } else {
       comments = JSON.parse (localStorage.getItem ('comments'));
     }
+    if (comment !== '') {
+      comments.push (comment);
+    }
 
-    comments.push (comment);
     // Store the comments into localStorage using "localStorage.setItem"
     localStorage.setItem ('comments', JSON.stringify (comments));
     //remove all li(s) to prevent duplicate
-    $ ('#comments').empty ();
+    $ ('#comments li').remove ();
     loadPosts ();
     e.preventDefault ();
+  });
+
+  $ ('#delete-all').on ('click', () => {
+    localStorage.clear ();
+    $ ('#comments li').remove ();
   });
 });
